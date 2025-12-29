@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program Pembelian Semen</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 550px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #3a7bd5;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3a7bd5;
+        }
+
+        .info-box {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3a7bd5;
+        }
+
+        .info-box p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-hitung {
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            color: white;
+        }
+
+        .btn-hitung:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(58, 123, 213, 0.4);
+        }
+
+        .btn-reset {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-reset:hover {
+            background: #e0e0e0;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: none;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .result-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .result-total {
+            background: rgba(255, 255, 255, 0.25);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .result-total .label {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .result-total .value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .detail-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏗️ Program Pembelian Semen</h1>
+        <p class="subtitle">Sistem Perhitungan Otomatis</p>
+
+        <div class="info-box">
+            <p><strong>📋 Ketentuan:</strong></p>
+            <p>• Pembelian < 10 sak: Biaya kirim Rp 5.000</p>
+            <p>• Pembelian ≥ 10 sak: Diskon 5%</p>
+        </div>
+
+        <div class="input-group">
+            <label for="merkSemen">Merk Semen:</label>
+            <input type="text" id="merkSemen" placeholder="Contoh: Tiga Roda, Holcim, Gresik">
+        </div>
+
+        <div class="input-group">
+            <label for="hargaPerSak">Harga per Sak (Rp):</label>
+            <input type="number" id="hargaPerSak" placeholder="Masukkan harga per sak" min="0">
+        </div>
+
+        <div class="input-group">
+            <label for="jumlahPembelian">Jumlah Pembelian (Sak):</label>
+            <input type="number" id="jumlahPembelian" placeholder="Masukkan jumlah sak" min="1">
+        </div>
+
+        <div class="button-group">
+            <button class="btn-hitung" onclick="hitungPembelian()">Hitung Total</button>
+            <button class="btn-reset" onclick="resetForm()">Reset</button>
+        </div>
+
+        <div id="result" class="result">
+            <h2>🧾 Struk Pembelian</h2>
+            
+            <div class="result-item">
+                <div class="result-label">Merk Semen</div>
+                <div class="result-value" id="hasilMerk"></div>
+            </div>
+
+            <div class="result-item">
+                <div class="result-label">Jumlah Pembelian</div>
+                <div class="result-value" id="hasilJumlah"></div>
+            </div>
+
+            <div class="detail-box" id="detailPerhitungan"></div>
+
+            <div class="result-total">
+                <div class="label">Total Biaya yang Harus Dibayar</div>
+                <div class="value" id="hasilTotal"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatRupiah(angka) {
+            return 'Rp ' + angka.toLocaleString('id-ID');
+        }
+
+        function hitungPembelian() {
+            // Ambil nilai input
+            const merk = document.getElementById('merkSemen').value.trim();
+            const hargaPerSak = parseFloat(document.getElementById('hargaPerSak').value);
+            const jumlahPembelian = parseInt(document.getElementById('jumlahPembelian').value);
+
+            // Validasi input
+            if (!merk) {
+                alert('Mohon masukkan merk semen!');
+                return;
+            }
+
+            if (isNaN(hargaPerSak) || hargaPerSak <= 0) {
+                alert('Mohon masukkan harga per sak yang valid!');
+                return;
+            }
+
+            if (isNaN(jumlahPembelian) || jumlahPembelian <= 0) {
+                alert('Mohon masukkan jumlah pembelian yang valid!');
+                return;
+            }
+
+            // Hitung total harga awal
+            let totalHarga = hargaPerSak * jumlahPembelian;
+            let biayaKirim = 0;
+            let diskon = 0;
+            let keterangan = '';
+
+            // Logika perhitungan berdasarkan syarat
+            if (jumlahPembelian < 10) {
+                // Pembelian kurang dari 10 sak: tambah biaya kirim Rp 5.000
+                biayaKirim = 5000;
+                totalHarga += biayaKirim;
+                keterangan = `
+                    <strong>Detail Perhitungan:</strong><br>
+                    Harga: ${jumlahPembelian} sak × ${formatRupiah(hargaPerSak)} = ${formatRupiah(hargaPerSak * jumlahPembelian)}<br>
+                    Biaya Kirim: ${formatRupiah(biayaKirim)}<br>
+                    <em>(Pembelian < 10 sak dikenakan biaya kirim)</em>
+                `;
+            } else {
+                // Pembelian 10 sak atau lebih: dapat diskon 5%
+                diskon = totalHarga * 0.05;
+                totalHarga -= diskon;
+                keterangan = `
+                    <strong>Detail Perhitungan:</strong><br>
+                    Harga: ${jumlahPembelian} sak × ${formatRupiah(hargaPerSak)} = ${formatRupiah(hargaPerSak * jumlahPembelian)}<br>
+                    Diskon 5%: ${formatRupiah(diskon)}<br>
+                    <em>(Pembelian ≥ 10 sak mendapat diskon 5%)</em>
+                `;
+            }
+
+            // Tampilkan hasil
+            document.getElementById('hasilMerk').textContent = merk;
+            document.getElementById('hasilJumlah').textContent = jumlahPembelian + ' Sak';
+            document.getElementById('detailPerhitungan').innerHTML = keterangan;
+            document.getElementById('hasilTotal').textContent = formatRupiah(totalHarga);
+
+            // Tampilkan div hasil
+            document.getElementById('result').classList.add('show');
+
+            // Scroll ke hasil
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function resetForm() {
+            document.getElementById('merkSemen').value = '';
+            document.getElementById('hargaPerSak').value = '';
+            document.getElementById('jumlahPembelian').value = '';
+            document.getElementById('result').classList.remove('show');
+        }
+
+        // Event listener untuk Enter key
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                hitungPembelian();
+            }
+        });
+    </script>
+</body>
+</html>
